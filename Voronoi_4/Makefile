@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp -o main.out
+	g++ main.cpp geom2.cpp -o main.out
