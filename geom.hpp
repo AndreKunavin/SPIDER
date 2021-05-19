@@ -30,6 +30,7 @@ struct Point
 		return sqrt(x * x + y * y);
 	}
 
+/////////*****************************//////////
 	Point rand(double square) 
 	{
         std::random_device rd;
@@ -39,6 +40,7 @@ struct Point
         double y = distr(gen);
         return Point(x, y);
     }
+////////*******************************/////////
 
 	Point normalize() const
 	{
@@ -143,7 +145,7 @@ struct Segment : public Line
 	Point S, E;
 
 	Segment(const Point &S = 0, const Point &E = 0) : Line(S, E), S(S), E(E) {};
-
+//////***********************************************//////
 	Line midpoint_perpendicular() 
 	{
 		double a, b, c;
@@ -153,7 +155,7 @@ struct Segment : public Line
 		Line perp(a, b, c);
 		return perp;
 	}
-
+//////////*******************************************///////
 	virtual bool include(Point &p) const
 	{
 		return Line::include(p) && in_interval(S.x, E.x, p.x) && in_interval(S.y, E.y, p.y);
@@ -267,9 +269,10 @@ ostream& operator << (ostream &out, const vector<Point> &p)
 
 Point get_intersection(const Line &l1, const Line &l2)
 {
-	if (abs(l1.a * l2.b - l1.b * l2.a) < EPS);
+	if (abs(l1.a * l2.b - l1.b * l2.a) < EPS) 
+	{
 		return nunPoint;
-
+	}
 	Point p;
 	p.y = (l2.a * l1.c - l1.a * l2.c) / (l1.a * l2.b - l2.a * l1.b);
 	p.x = (l1.b * l2.c - l2.b * l1.c) / (l1.a * l2.b - l2.a * l1.b);
@@ -337,6 +340,19 @@ vector<Point> get_intersection(Circle &c1, Circle &c2)
 
 	return rez;
 }
+
+/////**************************************////// intersection of half-plane and a vertex ///// Voronoi special //// return value: 1 - yes; -1 - no;
+std::size_t intersection(Line border, Point site, Point vertex) {
+	if (line_point_att(border, site) == line_point_att(border, vertex)) {
+		return 1;
+	} else { 
+		return -1;
+	}
+}
+double line_point_att(Line l, Point s) {
+	return (l.a * s.x + l.b * s.y + l.c >= 0) ? 1 : -1;
+}
+/////**************************************//////
 
 vector<Point> get_convex_hull(Polygon &v)
 {
