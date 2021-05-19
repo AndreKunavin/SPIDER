@@ -145,5 +145,6 @@ std::vector<Point> get_intersection(Circle &c1, Circle &c2);
 std::size_t line_point_att(Line l, Point s);
 
 std::size_t intersection(Line border, Point site, Point vertex);
+
 ///*****///
 std::vector<Point> get_convex_hull(Polygon &v);

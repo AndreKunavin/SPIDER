@@ -24,7 +24,7 @@ bool in_interval(const double &a, const double &b, const double &x)
 	{
         std::random_device rd;
         std::mt19937 gen((rd()));
-        std::uniform_real_distribution<> distr(-square, square);
+        std::uniform_real_distribution<> distr(0, square);
         double x = distr(gen);
         double y = distr(gen);
         return Point(x, y);
