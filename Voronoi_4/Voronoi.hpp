@@ -1,5 +1,10 @@
 #include "geom2.hpp"
 #define SQUARE 600.0f
+#define WINDOW_WIDTH 600
+#define WINDOW_HIGHT 600
+#define SPIDER_RAD 10
+#define SMALL_DIST 40
+#define WALL_DANGER 15
 
 class Cell {
 public:
@@ -16,9 +21,9 @@ public:
 
 class Voronoi {
 public:
-    Voronoi(std::vector<Point> &site, std::size_t walls_pnt_num_) {
+    Voronoi(std::vector<Point> &sites, std::size_t walls_pnt_num_) {
         walls_pnt_num = walls_pnt_num_;
-        plot_diagram(site);
+        plot_diagram(sites);
     }
     std::vector<Cell> diagram;
 
@@ -34,23 +39,29 @@ public:
     std::size_t walls_pnt_num;
 
 private:   
-    void plot_diagram(std::vector<Point> &site) {
+    void plot_diagram(std::vector<Point> &sites) {
         
-        for (std::size_t i = walls_pnt_num; i < site.size(); i++) {
+        for (std::size_t i = walls_pnt_num; i < sites.size(); i++) {
             Polygon cell;
-            plot_cell(i, site, cell);
+            plot_cell(i, sites, cell);
         }
 
     }
-    void plot_cell(std::size_t i, std::vector<Point> &site, Polygon &cell) {
+    void plot_cell(std::size_t i, std::vector<Point> &sites, Polygon &cell) {
         
         std::vector<Point> perps_intersection;
         std::vector<Line> perps;
         Polygon convex;
+
+        if ((walls_pnt_num != 0) && (WALL_DANGER != 0)) {
+            if (site_wall_intersection(sites[i])) {
+                return;
+            }
+        }
         
-        for (std::size_t j = 0; j < site.size(); j++) {
+        for (std::size_t j = 0; j < sites.size(); j++) {
             if (i != j) {
-                Segment edge(site[i], site[j]);
+                Segment edge(sites[i], sites[j]);
                 perps.push_back(edge.midpoint_perpendicular());
             }
         }
@@ -67,12 +78,12 @@ private:
         }
 
         for (std::size_t j = 0; j < perps_intersection.size(); j++) {
-            if (belong_to_cell(site[i], perps_intersection[j], perps)) {
+            if (belong_to_cell(sites[i], perps_intersection[j], perps)) {
                 convex.push_back(perps_intersection[j]);
             }
         }
         make_order(convex);
-        Cell c(site[i], convex);
+        Cell c(sites[i], convex);
         diagram.push_back(c);
     }
 
@@ -127,6 +138,10 @@ private:
         Point c = vertex[a];
         vertex[a] = vertex[b];
         vertex[b] = c;
+    }
+
+    std::size_t site_wall_intersection(Point site) {
+        return ((site.x <= WALL_DANGER) || (site.y <= WALL_DANGER) || (site.x >= WINDOW_WIDTH - WALL_DANGER) || (site.y >= WINDOW_HIGHT - WALL_DANGER)) ? 1 : 0;
     }
 
 

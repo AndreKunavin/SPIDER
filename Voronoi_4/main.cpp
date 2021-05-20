@@ -1,12 +1,8 @@
 #include "geom2.hpp"
 #include "Voronoi.hpp"
 
-#define S_SIZE 20
-#define WINDOW_WIDTH 600
-#define WINDOW_HIGHT 600
-#define SPIDER_RAD 10.0f
-#define SMALL_DIST 49
-#define WALL_DANGER 15
+#define S_SIZE 500
+
 
 void make_walls(std::vector<Point> &site) {
     
@@ -28,21 +24,47 @@ void make_walls(std::vector<Point> &site) {
     }
 }
 
-int main() {
-    std::vector<Point> site;
+void transfer(std::vector<Polygon> &from, std::vector<Point> &to) {
+    for (auto &pol : from) {
+        for (auto &pnt : pol) {
+            to.push_back(pnt);
+        }
+    }
+}
 
-    make_walls(site);
-    std::size_t walls_pnt_num = site.size();
+int main() {
+    std::vector<Point> sites;
+
+    /********testing**********/
     
+    /*std::vector<Polygon> obstacles;
+    for (std::size_t j = 0; j < 4; j++) {
+        Polygon test;
+        for (std::size_t i = 0; i < 10; i++) {
+            Point rand;
+            Point p = rand.rand(SQUARE);
+            test.push_back(p);
+            std::cout << p.x << ' ' << p.y << std::endl;
+        }
+        std::cout << std::endl;
+    obstacles.push_back(test);
+    }
+    transfer(obstacles, sites);
+   
+    /*************************/
+
+    make_walls(sites);
+    std::size_t walls_pnt_num = sites.size();
+
     for (std::size_t i = 0; i < S_SIZE; i++) {
         Point rand;
-        site.push_back(rand.rand(SQUARE));
+        sites.push_back(rand.rand(SQUARE));
     }
     
-    Voronoi V(site, walls_pnt_num);
+    Voronoi V(sites, walls_pnt_num);
     V.out();
 
-    for (auto &it : site) {
+    for (auto &it : sites) {
         std::cout << it.x << ' ' << it.y << std::endl;
     }
 }
