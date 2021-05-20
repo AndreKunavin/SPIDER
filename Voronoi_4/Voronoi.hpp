@@ -1,5 +1,5 @@
 #include "geom2.hpp"
-#define SQUARE 100.0f
+#define SQUARE 600.0f
 
 class Cell {
 public:
@@ -13,27 +13,30 @@ public:
     Polygon convex;
 };
 
+
 class Voronoi {
 public:
-    Voronoi(std::vector<Point> &site) {
+    Voronoi(std::vector<Point> &site, std::size_t walls_pnt_num_) {
+        walls_pnt_num = walls_pnt_num_;
         plot_diagram(site);
     }
     std::vector<Cell> diagram;
 
     void out() {
         for (std::size_t i = 0; i < diagram.size(); i++) {
-            std::cout <<  "cell " << i << " (site " << diagram[i].site.x << ' ' << diagram[i].site.y << ")" << std::endl;
+            //std::cout <<  "cell " << i << " (site " << diagram[i].site.x << ' ' << diagram[i].site.y << ")" << std::endl;
             for (auto& v : diagram[i].convex) {
                 std::cout << v.x << ' ' << v.y << std::endl;
             }
             std::cout << std::endl;
         }       
     }
+    std::size_t walls_pnt_num;
 
 private:   
     void plot_diagram(std::vector<Point> &site) {
-
-        for (std::size_t i = 0; i < site.size(); i++) {
+        
+        for (std::size_t i = walls_pnt_num; i < site.size(); i++) {
             Polygon cell;
             plot_cell(i, site, cell);
         }
@@ -68,7 +71,6 @@ private:
                 convex.push_back(perps_intersection[j]);
             }
         }
-        
         make_order(convex);
         Cell c(site[i], convex);
         diagram.push_back(c);

@@ -1,15 +1,15 @@
 #include "geom2.hpp"
 #include "Voronoi.hpp"
 
-#define S_SIZE 500
+#define S_SIZE 20
 #define WINDOW_WIDTH 600
-#define WINDOW_HIGHT 400
+#define WINDOW_HIGHT 600
 #define SPIDER_RAD 10.0f
 #define SMALL_DIST 49
 #define WALL_DANGER 15
 
 void make_walls(std::vector<Point> &site) {
-
+    
     for (std::size_t i = 0; i <= (WINDOW_WIDTH - 2 * WALL_DANGER) / SMALL_DIST; i++) {
         
         Point celling(WALL_DANGER + i * SMALL_DIST, WINDOW_HIGHT - WALL_DANGER);
@@ -30,17 +30,19 @@ void make_walls(std::vector<Point> &site) {
 
 int main() {
     std::vector<Point> site;
-    //make_walls(site);
 
+    make_walls(site);
+    std::size_t walls_pnt_num = site.size();
+    
     for (std::size_t i = 0; i < S_SIZE; i++) {
         Point rand;
         site.push_back(rand.rand(SQUARE));
     }
-
-    Voronoi V(site);
+    
+    Voronoi V(site, walls_pnt_num);
     V.out();
 
-    /*for (auto &it : site) {
+    for (auto &it : site) {
         std::cout << it.x << ' ' << it.y << std::endl;
-    }*/
+    }
 }
