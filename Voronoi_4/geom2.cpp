@@ -348,11 +348,13 @@ std::size_t line_point_att(Line l, Point s) { 			//default: line_point_att(line,
 		return BOARDER;
 	}
 }
+
 std::size_t intersection(Line border, Point site, Point vertex) {
 	//std::cout << line_point_att(border, site) << ' ' << line_point_att(border, vertex) << std::endl;
 	std::size_t att_v = line_point_att(border, vertex);
+	std::size_t att_s = line_point_att(border, site);
 	if (att_v != BOARDER) {
-		if (att_v == 0) {
+		if (att_v == att_s) {
 			return 1;
 		} else {
 			return 0;

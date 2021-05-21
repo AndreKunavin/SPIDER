@@ -1,7 +1,7 @@
 #include "geom2.hpp"
 #include "Voronoi.hpp"
 
-#define S_SIZE 500
+#define S_SIZE 60
 
 
 void make_walls(std::vector<Point> &site) {
@@ -54,14 +54,12 @@ int main() {
     /*************************/
 
     make_walls(sites);
-    std::size_t walls_pnt_num = sites.size();
 
     for (std::size_t i = 0; i < S_SIZE; i++) {
         Point rand;
         sites.push_back(rand.rand(SQUARE));
     }
-    
-    Voronoi V(sites, walls_pnt_num);
+    Voronoi V(sites);
     V.out();
 
     for (auto &it : sites) {

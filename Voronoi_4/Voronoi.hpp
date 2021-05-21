@@ -21,8 +21,8 @@ public:
 
 class Voronoi {
 public:
-    Voronoi(std::vector<Point> &sites, std::size_t walls_pnt_num_) {
-        walls_pnt_num = walls_pnt_num_;
+    Voronoi(std::vector<Point> &sites) {
+        walls_pnt_num = sites.size();
         plot_diagram(sites);
     }
     std::vector<Cell> diagram;
@@ -41,7 +41,7 @@ public:
 private:   
     void plot_diagram(std::vector<Point> &sites) {
         
-        for (std::size_t i = walls_pnt_num; i < sites.size(); i++) {
+        for (std::size_t i = 0; i < sites.size(); i++) {
             Polygon cell;
             plot_cell(i, sites, cell);
         }
@@ -52,18 +52,31 @@ private:
         std::vector<Point> perps_intersection;
         std::vector<Line> perps;
         Polygon convex;
-
-        if ((walls_pnt_num != 0) && (WALL_DANGER != 0)) {
-            if (site_wall_intersection(sites[i])) {
-                return;
-            }
-        }
         
         for (std::size_t j = 0; j < sites.size(); j++) {
             if (i != j) {
                 Segment edge(sites[i], sites[j]);
                 perps.push_back(edge.midpoint_perpendicular());
             }
+        }
+
+        Line wall_l(1, 0, 0);
+        Line wall_r(1, 0, -WINDOW_WIDTH);
+        Line ceiling(0, 1, -WINDOW_HIGHT);
+        Line floor(0, 1, 0);
+
+        if ((sites[i].x <= WINDOW_WIDTH / 2) && (sites[i].y <= WINDOW_HIGHT / 2))  {
+            perps.push_back(wall_l);
+            perps.push_back(floor);
+        } else if ((sites[i].x <= WINDOW_WIDTH / 2) && (sites[i].y > WINDOW_HIGHT / 2)) {
+            perps.push_back(wall_l);
+            perps.push_back(ceiling);
+        } else if ((sites[i].x > WINDOW_WIDTH / 2) && (sites[i].y < WINDOW_HIGHT / 2)) {
+            perps.push_back(floor);
+            perps.push_back(wall_r);            
+        } else if ((sites[i].x > WINDOW_WIDTH / 2) && (sites[i].y > WINDOW_HIGHT / 2)) {
+            perps.push_back(ceiling);
+            perps.push_back(wall_r);
         }
 
         for (std::size_t k = 0; k < perps.size(); k++) {
@@ -143,6 +156,4 @@ private:
     std::size_t site_wall_intersection(Point site) {
         return ((site.x <= WALL_DANGER) || (site.y <= WALL_DANGER) || (site.x >= WINDOW_WIDTH - WALL_DANGER) || (site.y >= WINDOW_HIGHT - WALL_DANGER)) ? 1 : 0;
     }
-
-
 };
