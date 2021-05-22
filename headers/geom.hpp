@@ -24,7 +24,12 @@ struct Point : sf::Vector2<double>
 	Point(const double& _x = INF, const double& _y = INF);
 
 	template <typename T>
-	Point(const Vector2<T>& v);
+	Point(const Vector2<T>& v)
+	{
+		x = (double)v.x;
+		y = (double)v.y;
+	}
+
     ///*****///
     Point rand(double square);
     ///*****///

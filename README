@@ -1,7 +1,0 @@
-The project SPIDER is an simulator of a spider runnning on the table and facing hot obstacles. The mission of the spider is to reach the target point via the safest and the fastest way.
-
-Interactive: drawing obstacles, variation of the obstacles` temperature
-All graphics is made via SFML
-
-Made by MIPT DREC students: Vladislav Paroshin, Gurgenize Anna and Andrei Kunavin
-

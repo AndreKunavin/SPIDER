@@ -1,4 +1,4 @@
-#include "geom.hpp"
+#include "headers/geom.hpp"
 
 bool in_interval(const double &a, const double &b, const double &x)
 {
@@ -12,12 +12,7 @@ bool in_interval(const double &a, const double &b, const double &x)
 		y = _y;
 	}
 
-	template <typename T>
-	Point::Point(const Vector2<T>& v)
-	{
-		x = (double)v.x;
-		y = (double)v.y;
-	}
+	
 
     Point Point::rand(double square) 
 	{
