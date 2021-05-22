@@ -7,6 +7,12 @@ using namespace std;
 using sf::RenderWindow;
 using sf::Sprite;
 using sf::Texture;
+using sf::Mouse;
+using sf::Vertex;
+using sf::Vector2f;
+using sf::ConvexShape;
+using sf::Vertex;
+using sf::Keyboard;
 
 class Button
 {
@@ -26,17 +32,24 @@ private:
 	int (*handler) (void* param);
 };
 
+struct forBut
+{
+	bool is_go = 0;
+	bool is_draw = 0;
+	Point position;
+};
+
 class Menu
 {
 public:
 	vector<Button> buttons;
-	bool is_menu;
+	//bool is_menu;
 	Sprite back;
 	void Draw(RenderWindow& window);
-	void show(RenderWindow& window, Point& whereSpider);
+	void show(RenderWindow& window, forBut& state);
 };
 
-class Roller : public Button
+class Roller
 {
 public:
 	Point left, right;
@@ -54,12 +67,7 @@ public:
 	bool inside(Point p);
 };
 
-struct forBut
-{
-	bool is_go;
-	bool is_draw;
-	Point position;
-};
+
 
 //нужны кнопки: 
 //запустить паучка

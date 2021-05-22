@@ -3,9 +3,10 @@
 #include "headers/defines.h"
 #include "headers/obstacle.h"
 #include "headers/menu.h"
+#include <thread>
 
-using namespace sf;
 using namespace std;
+using sf::Event;
 //кнопки: 
 //запустить паучка
 //остановить паучка
@@ -15,39 +16,40 @@ using namespace std;
 //очистить карту
 //отменить последнее препятствие
 
+void Create_buts(vector<Button>& buts);
+
 vector <Obstacle> obstacles;
 
-void Create_buts(vector<Button>& buts);
 
 int Go(void* param)
 {
 	cout << "go!";
-	forBut& fb = (forBut&)param;
-	fb.is_go = 1;
+	forBut* fb = (forBut*)param;
+	fb->is_go = 1;
 	return 1;
 }
 
 int Stop(void* param)
 {
 	cout << "stop";
-	forBut& fb = (forBut&)param;
-	fb.is_go = 0;
+	forBut* fb = (forBut*)param;
+	fb->is_go = 0;
 	return 0;
 }
 
 int Restart(void* param)
 {
-	forBut& fb = (forBut&)param;
-	fb.is_go = 0;
-	fb.position = (Point)START;
+	forBut* fb = (forBut*)param;
+	fb->is_go = 0;
+	fb->position = (Point)START;
 	return 0;
 }
 
 int Create_obstacle(void* param)
 {
-	forBut& fb = (forBut&)param;
-	fb.is_go = !(fb.is_go);
-	return bool(fb.is_go);
+	forBut *fb = (forBut*)param;
+	fb->is_draw = !(fb->is_draw);
+	return bool(fb->is_draw);
 }
 
 int NewField(void* param)
@@ -63,11 +65,19 @@ int RemoveTheLast(void* param)
 	return 1;
 }
 
+
+
+
 int main()
 {
+	//init block
+	forBut state;
+
 	Menu menu;
 	Point a;
 	Create_buts(menu.buttons);
+	Roller roller;
+
 	RenderWindow window(sf::VideoMode(WEIDHT, HIGHT), "my_window");
 	while (window.isOpen())
 	{
@@ -75,12 +85,38 @@ int main()
 		window.clear(sf::Color::Blue);
 		while (window.pollEvent(event))
 		{
-			if (event.type == Event::Closed)
+			switch (event.type)
+			{
+			case Event::Closed:
 				window.close();
+				break;
+
+			case Event::MouseButtonPressed:
+				if (Mouse::isButtonPressed(Mouse::Left))
+				{
+					menu.show(window, state);
+
+					if (state.is_draw)
+					{
+						thread threadBorders([&]()
+							{
+								Obstacle tmpObst;
+								if (tmpObst.takeBorders(window))
+									obstacles.push_back(tmpObst);
+							});
+						threadBorders.detach();
+					}
+				}
+				break;
+			}
+			//default:
+
 		}
 		menu.Draw(window);
-		if(Mouse::isButtonPressed(Mouse::Left))
-			menu.show(window, a);
+		
+		for (int i = 0;i < (int)obstacles.size(); i++)
+			obstacles[i].coloringObstacle(window);
+
 		window.display();
 	}
 	return 0;

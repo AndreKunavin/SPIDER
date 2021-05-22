@@ -66,7 +66,7 @@ Graph Test2(int cntx, int cnty, double minDist)
 	answerG.build(cells, minDist);
 	return answerG;
 }
-
+/*
 int main()
 {
 	Point p = Point(Mouse::getPosition());
@@ -99,3 +99,4 @@ int main()
 	_getch();
 	return 0;
 }
+*/

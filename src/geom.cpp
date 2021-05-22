@@ -350,3 +350,16 @@ std::vector<Point> get_convex_hull(Polygon &v)
 
 	return rez;
 }
+
+bool is_inside(Point p, const Polygon& pol)
+{
+	double angleSum = 0;
+	for (int i = 0; i < pol.size(); i++)
+	{
+		int next = (i + 1) % pol.size();
+		angleSum += angle(pol[i] - p, pol[next] - p);
+	}
+	if (abs(angleSum) < EPS)
+		return false;
+	return true;
+}

@@ -5,12 +5,7 @@
 #include "defines.h"
 #include <SFML/Graphics.hpp>
 using namespace std; 
-using sf::Mouse;
-using sf::Vertex;
-using sf::Vector2f;
-using sf::ConvexShape;
-using sf::Vertex;
-using sf::Keyboard;
+
 
 
 bool Button::inside(Point p)
@@ -33,27 +28,14 @@ int Button::doing(void* param)
 	return handler(param);
 }
 
-void Menu::show(RenderWindow& window, Point& whereSpider)
+void Menu::show(RenderWindow& window, forBut& state)
 {
-	is_menu = 1;
-	forBut go;
-	go.is_go = 0;  
-	go.is_draw = 0;
+	//is_menu = 1;
 	back.setPosition(Vector2f(0, 0));
-	while (is_menu)
-	{
-		go.position = whereSpider;//получить go.position из того, где паучок находится
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-			is_menu = 0;
-		if (Mouse::isButtonPressed(Mouse::Left))
-		{
-			for (int i = 0; i < (int)buttons.size(); i++)
-			{
-				if (buttons[i].inside(Point(Mouse::getPosition(window))))
-					buttons[i].doing(&go);
-			}
-		}
-	}
+		
+	for (int i = 0; i < (int)buttons.size(); i++)
+		if (buttons[i].inside(Point(Mouse::getPosition(window))))
+			buttons[i].doing(&state);
 }
 
 void Menu::Draw(RenderWindow& window)
@@ -66,8 +48,8 @@ void Menu::Draw(RenderWindow& window)
 
 bool Roller::inside(Point p)
 {
-	return p.x > leftup.x&& p.x < rightdown.x &&
-		p.y < leftup.y && p.y > rightdown.y;
+	return in_interval(leftup.x, rightdown.x, p.x) &&
+		in_interval(rightdown.y, leftup.y, p.y);
 }
 
 void Roller::setPosition(RenderWindow& window)

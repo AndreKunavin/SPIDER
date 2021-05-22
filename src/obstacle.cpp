@@ -17,6 +17,7 @@ using sf::Vertex;
 
 bool Obstacle::takeBorders(RenderWindow&  window)
 {
+	cout << "Start of building" << endl;
 	border.clear();
 	Point prev;
 	Point prev2;
